@@ -267,6 +267,10 @@ PrefabInstance:
       propertyPath: proyectilPrefab
       value: 
       objectReference: {fileID: 3587275447817926307, guid: 82d38d8f035ac17418a1462cd2d34148, type: 3}
+    - target: {fileID: 3571244922734627442, guid: ab4416f1ebec9f4499e2114dc40b419f, type: 3}
+      propertyPath: velocidadProyectil
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 5542297265418026910, guid: ab4416f1ebec9f4499e2114dc40b419f, type: 3}
       propertyPath: m_Name
       value: Jugador

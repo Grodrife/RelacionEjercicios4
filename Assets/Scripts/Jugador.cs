@@ -12,42 +12,72 @@ public class Jugador : MonoBehaviour
 
     [SerializeField] private GameObject proyectilPrefab;
     [SerializeField] private float velocidadProyectil = 20f;
+    [SerializeField] private float cadenciaDisparo = 0.5f;
+
+    private float tiempoUltimoDisparo;
+    void Start()
+    {
+        tiempoUltimoDisparo = Time.time;
+    }
 
     // Update is called once per frame
     void Update()
     {
-        float horizontalProyectil;
-        float verticalProyectil;
         // Recogida de los inputs del jugador
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
         // Desplazamiento del objeto en funcion de los inputs, la velocidad y el tiempo
         transform.Translate(new Vector2(horizontalInput, verticalInput) * velocidadMovimiento * Time.deltaTime);
+        
+        Disparo();
+        
+    }
 
+    void Disparo()
+    {
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            horizontalProyectil = 0f;
-            verticalProyectil = 1f;
-            GameObject proyectil = Instantiate(proyectilPrefab, transform.position, transform.rotation);
-            proyectil.GetComponent<Rigidbody2D>().velocity = new Vector2(horizontalProyectil, verticalProyectil).normalized * velocidadProyectil;
-        } else if (Input.GetKeyDown(KeyCode.DownArrow))
-               {
-                   horizontalProyectil = 0f;
-                   verticalProyectil = -1f;
-                   GameObject proyectil = Instantiate(proyectilPrefab, transform.position, transform.rotation);
-                   proyectil.GetComponent<Rigidbody2D>().velocity = new Vector2(horizontalProyectil, verticalProyectil).normalized * velocidadProyectil;
-               } else if (Input.GetKeyDown(KeyCode.LeftArrow))
-                      {
-                          horizontalProyectil = -1f;
-                          verticalProyectil = 0f;
-                          GameObject proyectil = Instantiate(proyectilPrefab, transform.position, transform.rotation);
-                          proyectil.GetComponent<Rigidbody2D>().velocity = new Vector2(horizontalProyectil, verticalProyectil).normalized * velocidadProyectil;
-                      } else if (Input.GetKeyDown(KeyCode.RightArrow))
-                             {
-                                 horizontalProyectil = 1f;
-                                 verticalProyectil = 0f;
-                                 GameObject proyectil = Instantiate(proyectilPrefab, transform.position, transform.rotation);
-                                 proyectil.GetComponent<Rigidbody2D>().velocity = new Vector2(horizontalProyectil, verticalProyectil).normalized * velocidadProyectil;
-                             }
+            if (Time.time - tiempoUltimoDisparo >= cadenciaDisparo)
+            {
+                GenerarProyectil(0f, 1f);
+                tiempoUltimoDisparo = Time.time;
+            }
+            
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            if (Time.time - tiempoUltimoDisparo >= cadenciaDisparo)
+            {
+                GenerarProyectil(0f, -1f);
+                tiempoUltimoDisparo = Time.time;
+            }
+            
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            if (Time.time - tiempoUltimoDisparo >= cadenciaDisparo)
+            {
+                GenerarProyectil(-1f, 0f);
+                tiempoUltimoDisparo = Time.time;
+            }
+            
+        }
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            if (Time.time - tiempoUltimoDisparo >= cadenciaDisparo)
+            {
+                GenerarProyectil(1f, 0f);
+                tiempoUltimoDisparo = Time.time;
+            }
+            
+        }
+    }
+
+    private void GenerarProyectil(float horizontalProyectil, float verticalProyectil)
+    {
+        GameObject proyectil;
+        float angulo = Mathf.Atan2(verticalProyectil, horizontalProyectil) * Mathf.Rad2Deg;
+        proyectil = Instantiate(proyectilPrefab, transform.position, Quaternion.Euler(0,0,angulo));
+        proyectil.GetComponent<Rigidbody2D>().velocity = new Vector2(horizontalProyectil, verticalProyectil).normalized * velocidadProyectil;
     }
 }

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Proyectil : MonoBehaviour
 {
-    [SerializeField] private float velocidad = 10f;
     [SerializeField] private float tiempoDestruccion = 2f;
     // Start is called before the first frame update
     void Start()
