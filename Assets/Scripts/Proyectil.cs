@@ -5,10 +5,12 @@ using UnityEngine;
 public class Proyectil : MonoBehaviour
 {
     [SerializeField] private float tiempoDestruccion = 2f;
+    private GameManager gameManager;
     // Start is called before the first frame update
     void Start()
     {
         Destroy(gameObject, tiempoDestruccion);
+        gameManager = FindObjectOfType<GameManager>();
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -17,6 +19,7 @@ public class Proyectil : MonoBehaviour
         {
             Destroy(other.gameObject);
             Destroy(gameObject);
+            gameManager.DestruirEnemigo();
         }
     }
 }

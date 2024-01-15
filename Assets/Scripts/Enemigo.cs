@@ -8,19 +8,31 @@ public class Enemigo : MonoBehaviour
     [SerializeField] private float velocidadMovimiento = 5f;
     private float ejeX;
     private float ejeY;
+
+    private GameManager gameManager;
     // Start is called before the first frame update
     void Start()
     {
-        rigidBody = GetComponent<Rigidbody2D>();
-        InvokeRepeating(nameof(GenerarDireccion), 0f, Random.Range(1f, 5f));
+        gameManager = FindObjectOfType<GameManager>();
+
+        if ( gameManager != null )
+        {
+            rigidBody = GetComponent<Rigidbody2D>();
+            InvokeRepeating(nameof(GenerarDireccion), 0f, Random.Range(1f, 5f));
+        }
+        
     }
 
     void Update()
     {
-        Mover();
+        if ( gameManager != null && gameManager.isGameRunning())
+        {
+            Mover();
+        }
+        
     }
 
-    void Mover()
+    private void Mover()
     {
         transform.Translate(new Vector2(ejeX, ejeY).normalized * velocidadMovimiento * Time.deltaTime);
     }

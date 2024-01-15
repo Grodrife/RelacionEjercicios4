@@ -10,6 +10,8 @@ public class Jugador : MonoBehaviour
     private float horizontalInput;
     private float verticalInput;
 
+    private GameManager gameManager;
+
     [SerializeField] private GameObject proyectilPrefab;
     [SerializeField] private float velocidadProyectil = 20f;
     [SerializeField] private float cadenciaDisparo = 0.5f;
@@ -17,19 +19,23 @@ public class Jugador : MonoBehaviour
     private float tiempoUltimoDisparo;
     void Start()
     {
+        gameManager = FindObjectOfType<GameManager>();
         tiempoUltimoDisparo = Time.time;
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Recogida de los inputs del jugador
-        horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
-        // Desplazamiento del objeto en funcion de los inputs, la velocidad y el tiempo
-        transform.Translate(new Vector2(horizontalInput, verticalInput) * velocidadMovimiento * Time.deltaTime);
-        
-        Disparo();
+        if(gameManager != null && gameManager.isGameRunning())
+        {
+            // Recogida de los inputs del jugador
+            horizontalInput = Input.GetAxis("Horizontal");
+            verticalInput = Input.GetAxis("Vertical");
+            // Desplazamiento del objeto en funcion de los inputs, la velocidad y el tiempo
+            transform.Translate(new Vector2(horizontalInput, verticalInput) * velocidadMovimiento * Time.deltaTime);
+
+            Disparo();
+        }
         
     }
 
