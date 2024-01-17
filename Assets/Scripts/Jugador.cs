@@ -14,13 +14,16 @@ public class Jugador : MonoBehaviour
 
     [SerializeField] private GameObject proyectilPrefab;
     [SerializeField] private float velocidadProyectil = 20f;
-    [SerializeField] private float cadenciaDisparo = 0.5f;
+    [SerializeField] private float cadenciaDisparo = 1f;
 
     private float tiempoUltimoDisparo;
+
+    private float alturaCamara;
+    private float anchoCamara;
     void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
-        tiempoUltimoDisparo = Time.time;
+        tiempoUltimoDisparo = -cadenciaDisparo;
     }
 
     // Update is called once per frame
@@ -35,13 +38,14 @@ public class Jugador : MonoBehaviour
             transform.Translate(new Vector2(horizontalInput, verticalInput) * velocidadMovimiento * Time.deltaTime);
 
             Disparo();
+            ComprobarPosicion();
         }
         
     }
 
     void Disparo()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.UpArrow))
         {
             if (Time.time - tiempoUltimoDisparo >= cadenciaDisparo)
             {
@@ -50,7 +54,7 @@ public class Jugador : MonoBehaviour
             }
             
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        else if (Input.GetKey(KeyCode.DownArrow))
         {
             if (Time.time - tiempoUltimoDisparo >= cadenciaDisparo)
             {
@@ -59,7 +63,7 @@ public class Jugador : MonoBehaviour
             }
             
         }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        else if (Input.GetKey(KeyCode.LeftArrow))
         {
             if (Time.time - tiempoUltimoDisparo >= cadenciaDisparo)
             {
@@ -68,7 +72,7 @@ public class Jugador : MonoBehaviour
             }
             
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        else if (Input.GetKey(KeyCode.RightArrow))
         {
             if (Time.time - tiempoUltimoDisparo >= cadenciaDisparo)
             {
@@ -85,5 +89,31 @@ public class Jugador : MonoBehaviour
         float angulo = Mathf.Atan2(verticalProyectil, horizontalProyectil) * Mathf.Rad2Deg;
         proyectil = Instantiate(proyectilPrefab, transform.position, Quaternion.Euler(0,0,angulo));
         proyectil.GetComponent<Rigidbody2D>().velocity = new Vector2(horizontalProyectil, verticalProyectil).normalized * velocidadProyectil;
+    }
+
+    private void ComprobarPosicion()
+    {
+        Vector2 posicion = transform.position;
+
+        alturaCamara = Camera.main.orthographicSize;
+        anchoCamara = alturaCamara * Screen.width / Screen.height;
+
+        if (posicion.x > anchoCamara)
+        {
+            posicion.x = -anchoCamara;
+        } else if (posicion.x < -anchoCamara)
+        {
+            posicion.x = anchoCamara;
+        }
+
+        if (posicion.y > alturaCamara)
+        {
+            posicion.y = -alturaCamara;
+        } else if(posicion.y < -alturaCamara)
+        {
+            posicion.y = alturaCamara;
+        }
+
+        transform.position = posicion;    
     }
 }
